@@ -1,11 +1,24 @@
+import { redirect } from "next/navigation";
 import { Locacao } from "../../database/tables";
 
-async function Locacoes() {
+async function deletarLocacao(formData) {
+    "use server";
+
+    const id = formData.get("id");
+    const locacao = await Locacao.findByPk(id);
+
+    await locacao.destroy();
+    redirect("/locacao");
+}
+
+export default async function Locacoes() {
     const locacoes = await Locacao.findAll();
+
     return (
         <div>
             <h1>Locações</h1>
-            <a href="/locacao/novo">Nova locação</a>
+            <a href="/locacao/novo">Nova Locação</a>
+
             <table border="1">
                 <thead>
                     <tr>
@@ -13,27 +26,33 @@ async function Locacoes() {
                         <th>Data Início</th>
                         <th>Data Fim</th>
                         <th>Valor Total</th>
-                        <th>Cliente ID</th>
-                        <th>Produto ID</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
+
                 <tbody>
-                    {locacoes.map(function (locacao) {
-                        return (
-                            <tr key={locacao.id}>
-                                <td>{locacao.id}</td>
-                                <td>{locacao.dataInicio}</td>
-                                <td>{locacao.dataFim}</td>
-                                <td>{locacao.valorTotal}</td>
-                                <td>{locacao.ClienteId}</td>
-                                <td>{locacao.ProdutoId}</td>
-                            </tr>
-                        );
-                    })}
+                    {locacoes.map((loc) => (
+                        <tr key={loc.id}>
+                            <td>{loc.id}</td>
+                            <td>{loc.dataInicio}</td>
+                            <td>{loc.dataFim}</td>
+                            <td>{loc.valorTotal}</td>
+
+                            <td>
+                                <form action="/locacao/edita">
+                                    <input type="hidden" name="id" defaultValue={loc.id} />
+                                    <button>Editar</button>
+                                </form>
+
+                                <form action={deletarLocacao}>
+                                    <input type="hidden" name="id" defaultValue={loc.id} />
+                                    <button>Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>
     );
 }
-
-export default Locacoes;

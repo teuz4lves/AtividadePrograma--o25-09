@@ -1,38 +1,30 @@
-import { Cliente } from "../../../database/tables";
 import { redirect } from "next/navigation";
+import { Funcionario } from "../../../database/tables";
 
-async function insereCliente(formData) {
+async function insereFuncionario(formData) {
     "use server";
 
-    await Cliente.create({
+    await Funcionario.create({
         nome: formData.get("nome"),
         sobrenome: formData.get("sobrenome"),
-        nascimento: formData.get("nascimento"),
-        cidade: formData.get("cidade"),
         telefone: formData.get("telefone"),
         cpf: formData.get("cpf"),
     });
 
-    redirect("/clientes");
+    redirect("/funcionarios");
 }
 
-export default function TelaNovoCliente() {
+export default function TelaNovoFuncionario() {
     return (
         <div className="form-container">
-            <h1>Novo Cliente</h1>
+            <h1>Novo Funcionário</h1>
 
-            <form action={insereCliente}>
+            <form action={insereFuncionario}>
                 <label>Nome</label>
                 <input type="text" name="nome" />
 
                 <label>Sobrenome</label>
                 <input type="text" name="sobrenome" />
-
-                <label>Nascimento</label>
-                <input type="date" name="nascimento" />
-
-                <label>Cidade</label>
-                <input type="text" name="cidade" />
 
                 <label>Telefone</label>
                 <input type="text" name="telefone" />

@@ -1,64 +1,42 @@
 import { redirect } from "next/navigation";
-import { Cliente } from "../../../database/tables";
+import { Locacao } from "../../../database/tables";
 
-async function editaCliente(formData) {
-    "use server"
-    const id = formData.get('id');
-    const nome = formData.get('nome');
-    const sobrenome = formData.get('sobrenome');
-    const nascimento = formData.get('nascimento');
-    const cidade = formData.get('cidade');
-    const telefone = formData.get('telefone');
-    const cpf = formData.get('cpf');
+async function editaLocacao(formData) {
+    "use server";
 
-    const clientes = await Cliente.findByPk(id);
-    clientes.nome = nome;
-    clientes.sobrenome = sobrenome;
-    clientes.nascimento = nascimento;
-    clientes.cidade = cidade;
-    clientes.telefone = telefone;
-    clientes.cpf = cpf;
+    const id = formData.get("id");
+    const locacao = await Locacao.findByPk(id);
 
-    await clientes.save();
+    locacao.dataInicio = formData.get("dataInicio");
+    locacao.dataFim = formData.get("dataFim");
+    locacao.valorTotal = formData.get("valorTotal");
 
-    redirect('/clientes');
-
+    await locacao.save();
+    redirect("/locacao");
 }
 
-async function TelaEditaClientes({searchParams}) {
+export default async function TelaEditaLocacao({ searchParams }) {
     const id = searchParams.id;
-    const cliente = await Cliente.findByPk(id);
+    const locacao = await Locacao.findByPk(id);
+
     return (
         <>
-            <h1>Editando a Locação </h1>
+            <h1>Editando Locação</h1>
 
-            <form action={editaCliente}>
+            <form action={editaLocacao} className="form-container">
+                <input type="hidden" name="id" defaultValue={locacao.id} />
 
-                <input type="text" name="id" defaultValue={cliente.id} /> <br />
+                <label>Data Início</label>
+                <input type="date" name="dataInicio" defaultValue={locacao.dataInicio} />
 
-                <label>Nome</label><br />
-                <input type="text" name="nome" defaultValue={cliente.nome} /> <br />
+                <label>Data Fim</label>
+                <input type="date" name="dataFim" defaultValue={locacao.dataFim} />
 
-                <label>Sobrenome</label><br />
-                <input type="text" name="sobrenome" defaultValue={cliente.sobrenome} /> <br />
+                <label>Valor Total</label>
+                <input type="number" step="0.01" name="valorTotal" defaultValue={locacao.valorTotal} />
 
-                <label>Nascimento</label><br />
-                <input type="date" name="nascimento" defaultValue={cliente.nascimento} /> <br />
-
-                <label>Cidade</label><br />
-                <input type="text" name="cidade" defaultValue={cliente.cidade} /> <br />
-
-                <label>Telefone</label><br />
-                <input type="text" name="telefone" defaultValue={cliente.telefone} /> <br />
-
-                <label>CPF</label><br />
-                <input type="text" name="cpf" defaultValue={cliente.cpf} /> <br />
-
-                <button>Confirmar</button>
+                <button className="btn">Confirmar</button>
             </form>
-
         </>
-    )
-
+    );
 }
-export default TelaEditaLocacao;

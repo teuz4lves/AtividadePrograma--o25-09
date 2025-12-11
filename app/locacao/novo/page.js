@@ -1,40 +1,32 @@
-import { Locacao } from '../../../database/tables';
-import { redirect } from 'next/navigation';
+import { redirect } from "next/navigation";
+import { Locacao } from "../../../database/tables";
 
 async function insereLocacao(formData) {
-    'use server';
+    "use server";
+
     const dados = {
-        dataInicio: formData.get('dataInicio'),
-        dataFim: formData.get('dataFim'),
-        valorTotal: formData.get('valorTotal'),
-        //ClienteId: formData.get('clienteId'),
-        //ProdutoId: formData.get('produtoId')
+        dataInicio: formData.get("dataInicio"),
+        dataFim: formData.get("dataFim"),
+        valorTotal: formData.get("valorTotal"),
     };
+
     await Locacao.create(dados);
-    redirect('/locacao');
+    redirect("/locacao");
 }
 
-function TelaNovaLocacao() {
+export default function TelaNovaLocacao() {
     return (
-        <form action={insereLocacao}>
-            <label htmlFor="dataInicio">Data Início</label><br/>
-            <input type="date" name="dataInicio" /><br/>
+        <form action={insereLocacao} className="form-container">
+            <label>Data Início</label>
+            <input type="date" name="dataInicio" />
 
-            <label htmlFor="dataFim">Data Fim</label><br/>
-            <input type="date" name="dataFim" /><br/>
+            <label>Data Fim</label>
+            <input type="date" name="dataFim" />
 
-            <label htmlFor="valorTotal">Valor Total</label><br/>
-            <input type="number" step="0.01" name="valorTotal" /><br/>
+            <label>Valor Total</label>
+            <input type="number" step="0.01" name="valorTotal" />
 
-            <label htmlFor="clienteId">Cliente ID</label><br/>
-            <input type="number" name="clienteId" /><br/>
-
-            <label htmlFor="produtoId">Produto ID</label><br/>
-            <input type="number" name="produtoId" /><br/>
-
-            <button>Cadastrar Locação</button>
+            <button className="btn">Cadastrar</button>
         </form>
-    )
+    );
 }
-
-export default TelaNovaLocacao;

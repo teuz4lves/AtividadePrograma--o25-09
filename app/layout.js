@@ -1,4 +1,5 @@
 import Menu from "../componentes/menu";
+import './geral.css';
 
 export const metadata = {
   title: 'MixLoc',

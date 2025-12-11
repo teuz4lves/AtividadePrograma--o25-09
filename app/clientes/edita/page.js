@@ -2,63 +2,55 @@ import { redirect } from "next/navigation";
 import { Cliente } from "../../../database/tables";
 
 async function editaCliente(formData) {
-    "use server"
-    const id = formData.get('id');
-    const nome = formData.get('nome');
-    const sobrenome = formData.get('sobrenome');
-    const nascimento = formData.get('nascimento');
-    const cidade = formData.get('cidade');
-    const telefone = formData.get('telefone');
-    const cpf = formData.get('cpf');
+    "use server";
 
-    const clientes = await Cliente.findByPk(id);
-    clientes.nome = nome;
-    clientes.sobrenome = sobrenome;
-    clientes.nascimento = nascimento;
-    clientes.cidade = cidade;
-    clientes.telefone = telefone;
-    clientes.cpf = cpf;
+    const id = formData.get("id");
 
-    await clientes.save();
+    const cliente = await Cliente.findByPk(id);
 
-    redirect('/clientes');
+    cliente.nome = formData.get("nome");
+    cliente.sobrenome = formData.get("sobrenome");
+    cliente.nascimento = formData.get("nascimento");
+    cliente.cidade = formData.get("cidade");
+    cliente.telefone = formData.get("telefone");
+    cliente.cpf = formData.get("cpf");
 
+    await cliente.save();
+
+    redirect("/clientes");
 }
 
-async function TelaEditaClientes({searchParams}) {
+export default async function TelaEditaClientes({ searchParams }) {
     const id = searchParams.id;
     const cliente = await Cliente.findByPk(id);
+
     return (
-        <>
-            <h1>Editando o filme</h1>
+        <div className="form-container">
+            <h1>Editar Cliente</h1>
 
             <form action={editaCliente}>
+                <input type="hidden" name="id" defaultValue={cliente.id} />
 
-                <input type="text" name="id" defaultValue={cliente.id} /> <br />
+                <label>Nome</label>
+                <input type="text" name="nome" defaultValue={cliente.nome} />
 
-                <label>Nome</label><br />
-                <input type="text" name="nome" defaultValue={cliente.nome} /> <br />
+                <label>Sobrenome</label>
+                <input type="text" name="sobrenome" defaultValue={cliente.sobrenome} />
 
-                <label>Sobrenome</label><br />
-                <input type="text" name="sobrenome" defaultValue={cliente.sobrenome} /> <br />
+                <label>Nascimento</label>
+                <input type="date" name="nascimento" defaultValue={cliente.nascimento} />
 
-                <label>Nascimento</label><br />
-                <input type="date" name="nascimento" defaultValue={cliente.nascimento} /> <br />
+                <label>Cidade</label>
+                <input type="text" name="cidade" defaultValue={cliente.cidade} />
 
-                <label>Cidade</label><br />
-                <input type="text" name="cidade" defaultValue={cliente.cidade} /> <br />
+                <label>Telefone</label>
+                <input type="text" name="telefone" defaultValue={cliente.telefone} />
 
-                <label>Telefone</label><br />
-                <input type="text" name="telefone" defaultValue={cliente.telefone} /> <br />
+                <label>CPF</label>
+                <input type="text" name="cpf" defaultValue={cliente.cpf} />
 
-                <label>CPF</label><br />
-                <input type="text" name="cpf" defaultValue={cliente.cpf} /> <br />
-
-                <button>Confirmar</button>
+                <button>Salvar Alterações</button>
             </form>
-
-        </>
-    )
-
+        </div>
+    );
 }
-export default TelaEditaClientes;
